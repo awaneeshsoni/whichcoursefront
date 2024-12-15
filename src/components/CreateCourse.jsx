@@ -42,11 +42,16 @@ const CreateCourse = () => {
       });
 
       // Navigate to the created course page
+      
       alert("Course created successfully!");
       navigate(`/courses/${response.data.course.slug}`);
     } catch (err) {
-      console.error("Error creating course:", err);
-      setError("Error creating course. Please try again.");
+      if (err.response && err.response.status === 400) {
+        alert("Course already exists!");
+      } else {
+        console.error("Error creating course:", err);
+        setError("Error creating course. Please try again.");
+      }
     }
     finally{
         setLoading(false)

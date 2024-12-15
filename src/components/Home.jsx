@@ -24,25 +24,39 @@ export default function Home() {
 
   return (
     <div>
-        <div className="container'">
-
-      <input
-        type="text"
-        placeholder="Search for a course"
-        value={search}
-        onChange={(e) =>
+      <div className="container'">
+        <input
+          type="text"
+          placeholder="Search for a course"
+          value={search}
+          onChange={(e) =>
             setSearch(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ""))
-        }
+          }
         />
-      <button onClick={handleSearch}>Search</button>
-      <Link to={"/createcourse"}>Create Course</Link>
-
-        </div>
+        <button onClick={handleSearch}>Search</button>
+        <br></br>
+        <Link to={"/createcourse"}>Create Course</Link>
+      </div>
       {loading && <div className="loader"></div>}
       {course && (
         <div>
           <h3>Course: {course.name}</h3>
-          <p>Slug: {course.slug}</p>
+          <p>Code: {course.slug}</p>
+          {course.professors && course.professors.length > 0 ? (
+            <div>
+              <h4>Professors:</h4>
+              <ul>
+                {course.professors.map((prof, index) => (
+                  <li key={index}>
+                    <strong>{prof.name}</strong>: Overall Rating -{" "}
+                    {prof.rating.overall || "No ratings yet"} Entires: {prof.rating.entries}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <p>No professors available.</p>
+          )}
           <Link to={`/courses/${course.slug}`}>Show More</Link>
         </div>
       )}

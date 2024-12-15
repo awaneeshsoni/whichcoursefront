@@ -53,6 +53,7 @@ const CourseDetail = () => {
               <p>Grading: {selectedProfessor.ratings.grading}</p>
               <p>Course Difficulty: {selectedProfessor.ratings.difficulty}</p>
               <p>Overall Rating: {selectedProfessor.ratings.overall}</p>
+              <p>Total Entries: {selectedProfessor.ratings.entries}</p>
             </div>
           )}
 
