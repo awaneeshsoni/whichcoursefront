@@ -13,10 +13,10 @@ const EditCourse = () => {
   const [showAddProfessorModal, setShowAddProfessorModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [ratings, setRatings] = useState({
-    attendance: "",
-    difficulty: "",
-    grading: "",
-    overall: "",
+    attendance: 0,
+    difficulty: 0,
+    grading: 0,
+    overall: 0,
   });
 
   // Fetch course details
@@ -69,6 +69,7 @@ const EditCourse = () => {
     if(selectedProfessor == ""){
       alert("first select a proff! if none then add one")
     }
+    console.log(ratings)
     try {
       setLoading(true)
       await axios.put(`${API}/courses/${slug}`, {

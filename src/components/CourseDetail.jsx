@@ -32,6 +32,7 @@ const CourseDetail = () => {
         <>
           <h2>{course.name}</h2>
           <p>Slug: {course.slug}</p>
+          <label>Professor: </label>
           <select
             onChange={(e) =>
               setSelectedProfessor(
@@ -48,7 +49,6 @@ const CourseDetail = () => {
 
           {selectedProfessor && (
             <div>
-              <h4>Professor: {selectedProfessor.name}</h4>
               <p>Attendace: {selectedProfessor.ratings.attendance}</p>
               <p>Grading: {selectedProfessor.ratings.grading}</p>
               <p>Course Difficulty: {selectedProfessor.ratings.difficulty}</p>
@@ -57,7 +57,7 @@ const CourseDetail = () => {
             </div>
           )}
 
-          <Link to={`/edit/${course.slug}`}>Edit Course</Link>
+          <Link to={`/edit/${course.slug}`}>Add Rating/Professors</Link>
         </>
       )}
     </div>

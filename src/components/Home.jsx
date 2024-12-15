@@ -48,7 +48,7 @@ export default function Home() {
               <ol>
                 {course.professors.map((prof, index) => (
                   <li key={index}>
-                    Prof. {prof.name}: Overall Rating -{" "} {prof.ratings.overall || "No ratings yet"} Entires -{prof.ratings.entries}
+                   <strong> Prof. {prof.name}</strong> Overall Rating -:{" "} {prof.ratings.overall || "No ratings yet"} Entires -: {prof.ratings.entries}
                   </li>
                 ))}
               </ol>
