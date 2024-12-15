@@ -45,14 +45,13 @@ export default function Home() {
           {course.professors && course.professors.length > 0 ? (
             <div>
               <h4>Professors:</h4>
-              <ul>
+              <ol>
                 {course.professors.map((prof, index) => (
                   <li key={index}>
-                    <strong>{prof.name}</strong>: Overall Rating -{" "}
-                    {prof.rating.overall || "No ratings yet"} Entires: {prof.rating.entries}
+                    Prof. {prof.name}: Overall Rating -{" "} {prof.ratings.overall || "No ratings yet"} Entires -{prof.ratings.entries}
                   </li>
                 ))}
-              </ul>
+              </ol>
             </div>
           ) : (
             <p>No professors available.</p>
