@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API = import.meta.env.VITE_API_URL
+const API = import.meta.env.VITE_API_URL;
 
 const EditCourse = () => {
   const { slug } = useParams(); // Get course slug from URL
@@ -13,10 +13,10 @@ const EditCourse = () => {
   const [showAddProfessorModal, setShowAddProfessorModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [ratings, setRatings] = useState({
-    attendance: 0,
-    difficulty: 0,
-    grading: 0,
-    overall: 0,
+    attendance: null,
+    difficulty: null,
+    grading: null,
+    overall: null,
   });
 
   // Fetch course details
@@ -30,9 +30,8 @@ const EditCourse = () => {
         }
       } catch (error) {
         console.error("Error fetching course details:", error);
-      }
-      finally{
-        setLoading(false)
+      } finally {
+        setLoading(false);
       }
     };
     fetchCourse();
@@ -42,7 +41,7 @@ const EditCourse = () => {
   const handleRatingsChange = (e) => {
     const { name, value } = e.target;
     const numberValue = value.trim();
-    
+
     // Check if the input is a valid whole number between 1 and 10
     if (numberValue === "" || /^\d+$/.test(numberValue)) {
       const parsedValue = parseInt(numberValue, 10);
@@ -52,8 +51,8 @@ const EditCourse = () => {
         return;
       }
 
-    setRatings((prev) => ({ ...prev, [name]: value }));}
-    else {
+      setRatings((prev) => ({ ...prev, [name]: value }));
+    } else {
       alert("Only numbers are allowed.");
     }
   };
@@ -66,12 +65,12 @@ const EditCourse = () => {
   };
   // Submit ratings
   const submitRating = async () => {
-    if(selectedProfessor == ""){
-      alert("first select a proff! if none then add one")
+    if (selectedProfessor == "") {
+      alert("first select a proff! if none then add one");
     }
-    console.log(ratings)
+    console.log(ratings);
     try {
-      setLoading(true)
+      setLoading(true);
       await axios.put(`${API}/courses/${slug}`, {
         slug,
         profSlug: selectedProfessor,
@@ -84,8 +83,7 @@ const EditCourse = () => {
       navigate(`/courses/${slug}`);
     } catch (error) {
       console.error("Error submitting ratings:", error);
-    }
-    finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -98,7 +96,7 @@ const EditCourse = () => {
 
       // Close modal after adding professor
       setShowAddProfessorModal(false);
-      
+
       // Refresh course data with the new professor
       const response = await axios.get(`${API}/courses/${slug}`);
       setCourse(response.data);
@@ -110,7 +108,7 @@ const EditCourse = () => {
 
   return (
     <div>
-      {loading && <div className="loader" ></div>}
+      {loading && <div className="loader"></div>}
       {course ? (
         <>
           <h2>Edit Course: {course.name}</h2>
@@ -118,23 +116,23 @@ const EditCourse = () => {
 
           {/* Dropdown for professors */}
           <div>
-          <label htmlFor="professor-select">Select Professor: </label>
-          <select
-            value={selectedProfessor}
-            onChange={(e) => setSelectedProfessor(e.target.value)}
+            <label htmlFor="professor-select">Select Professor: </label>
+            <select
+              value={selectedProfessor}
+              onChange={(e) => setSelectedProfessor(e.target.value)}
             >
-            {course.professors.map((prof) => (
-              <option key={prof.slug} value={prof.slug}>
-                {prof.name}
-              </option>
-            ))}
-          </select>
+              {course.professors.map((prof) => (
+                <option key={prof.slug} value={prof.slug}>
+                  {prof.name}
+                </option>
+              ))}
+            </select>
 
-          {/* Button to open Add Professor modal */}
-          <button onClick={() => setShowAddProfessorModal(true)}>
-            Add Professor
-          </button>
-            </div>
+            {/* Button to open Add Professor modal */}
+            <button onClick={() => setShowAddProfessorModal(true)}>
+              Add Professor
+            </button>
+          </div>
 
           {/* Add Professor Modal */}
           {showAddProfessorModal && (
@@ -156,7 +154,8 @@ const EditCourse = () => {
                   Cancel
                 </button>
               </div>
-            </div>)}
+            </div>
+          )}
 
           {/* Ratings input */}
           <h3>Add Ratings for {selectedProfessor}</h3>
@@ -166,7 +165,7 @@ const EditCourse = () => {
             name="attendance"
             value={ratings.attendance}
             onChange={handleRatingsChange}
-        onKeyPress={handleKeyPress}
+            onKeyPress={handleKeyPress}
           />
           <input
             type="number"
@@ -174,7 +173,7 @@ const EditCourse = () => {
             name="difficulty"
             value={ratings.difficulty}
             onChange={handleRatingsChange}
-        onKeyPress={handleKeyPress}
+            onKeyPress={handleKeyPress}
           />
           <input
             type="number"
@@ -182,7 +181,7 @@ const EditCourse = () => {
             name="grading"
             value={ratings.grading}
             onChange={handleRatingsChange}
-        onKeyPress={handleKeyPress}
+            onKeyPress={handleKeyPress}
           />
           <input
             type="number"
@@ -190,7 +189,7 @@ const EditCourse = () => {
             name="overall"
             value={ratings.overall}
             onChange={handleRatingsChange}
-        onKeyPress={handleKeyPress}
+            onKeyPress={handleKeyPress}
           />
           <button onClick={submitRating}>Submit Ratings</button>
         </>

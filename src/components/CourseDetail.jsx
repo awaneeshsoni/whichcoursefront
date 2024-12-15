@@ -31,7 +31,7 @@ const CourseDetail = () => {
       {course && (
         <>
           <h2>{course.name}</h2>
-          <p>Slug: {course.slug}</p>
+          <p>Course Code: {course.slug}</p>
           <label>Professor: </label>
           <select
             onChange={(e) =>
