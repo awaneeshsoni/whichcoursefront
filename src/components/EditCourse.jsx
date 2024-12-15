@@ -11,6 +11,7 @@ const EditCourse = () => {
   const [selectedProfessor, setSelectedProfessor] = useState("");
   const [newProfessor, setNewProfessor] = useState(""); // Store new professor name
   const [showAddProfessorModal, setShowAddProfessorModal] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [ratings, setRatings] = useState({
     attendance: "",
     difficulty: "",
@@ -29,6 +30,9 @@ const EditCourse = () => {
         }
       } catch (error) {
         console.error("Error fetching course details:", error);
+      }
+      finally{
+        setLoading(false)
       }
     };
     fetchCourse();
@@ -62,10 +66,11 @@ const EditCourse = () => {
   };
   // Submit ratings
   const submitRating = async () => {
-    if(newProfessor == ""){
+    if(selectedProfessor == ""){
       alert("first select a proff! if none then add one")
     }
     try {
+      setLoading(true)
       await axios.put(`${API}/courses/${slug}`, {
         slug,
         profSlug: selectedProfessor,
@@ -78,6 +83,9 @@ const EditCourse = () => {
       navigate(`/courses/${slug}`);
     } catch (error) {
       console.error("Error submitting ratings:", error);
+    }
+    finally{
+      setLoading(false);
     }
   };
 
@@ -101,6 +109,7 @@ const EditCourse = () => {
 
   return (
     <div>
+      {loading && <div className="loader" ></div>}
       {course ? (
         <>
           <h2>Edit Course: {course.name}</h2>

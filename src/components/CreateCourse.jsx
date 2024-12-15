@@ -10,6 +10,7 @@ const CreateCourse = () => {
   const [courseName, setCourseName] = useState(""); // State for course name
   const [courseCode, setCourseCode] = useState(""); // State for course code
   const [error, setError] = useState(""); // State for error message
+  const [loading, setLoading] = useState(false)
 
   // Handle changes in course name input
   const handleNameChange = (e) => {
@@ -34,6 +35,7 @@ const CreateCourse = () => {
 
     try {
       // Send POST request to create a new course
+      setLoading(true);
       const response = await axios.post(`${API}/courses`, {
         name: courseName,
         slug: courseCode, // Use course code as the slug
@@ -45,6 +47,9 @@ const CreateCourse = () => {
     } catch (err) {
       console.error("Error creating course:", err);
       setError("Error creating course. Please try again.");
+    }
+    finally{
+        setLoading(false)
     }
   };
 
@@ -78,7 +83,7 @@ const CreateCourse = () => {
           />
           {error && <p style={{ color: "red" }}>{error}</p>}
         </div>
-
+        {loading && <div className="loader" ></div>}
         <button type="submit">Create Course</button>
       </form>
     </div>
