@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
 const API = import.meta.env.VITE_API_URL;
@@ -196,6 +196,8 @@ const EditCourse = () => {
       ) : (
         <p>Loading course details...</p>
       )}
+      <br></br>
+      <Link to={'/'} >Home</Link>
     </div>
   );
 };

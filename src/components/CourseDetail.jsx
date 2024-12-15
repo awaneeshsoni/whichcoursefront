@@ -60,6 +60,8 @@ const CourseDetail = () => {
           <Link to={`/edit/${course.slug}`}>Add Rating/Professors</Link>
         </>
       )}
+      <br></br>
+      <Link to={'/'} >Home</Link>
     </div>
   );
 };

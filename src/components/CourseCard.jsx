@@ -11,6 +11,7 @@ const CourseCard = ({ course }) => {
           <p>Overall Rating: {prof.ratings.overall}</p>
         </div>
       ))}
+      <br></br>
       <Link to={`/courses/${course.slug}`}>View Details</Link>
     </div>
   );
