@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../services/api";
+import axios from "axios";
+
+const API = import.meta.env.VITE_API_URL
+
 
 const CreateCourse = () => {
   const navigate = useNavigate(); // Use navigate for redirection
@@ -31,7 +34,7 @@ const CreateCourse = () => {
 
     try {
       // Send POST request to create a new course
-      const response = await api.post("/courses", {
+      const response = await axios.post(`${API}/courses`, {
         name: courseName,
         slug: courseCode, // Use course code as the slug
       });

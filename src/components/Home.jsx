@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "../App.css";
-import api from "../services/api";
+import axios from "axios";
 
+const API = import.meta.env.VITE_API_URL
 
 export default function Home() {
-  const [search, setSearch] = useState("");
+    const [search, setSearch] = useState("");
   const [course, setCourse] = useState(null);
-
   const handleSearch = async () => {
     try {
-      const response = await api.get(`/courses/${search}`);
+      const response = await axios.get(`${API}/courses/${search}`);
       setCourse(response.data);
     } catch (error) {
       alert("Course not found! Create a new one ");

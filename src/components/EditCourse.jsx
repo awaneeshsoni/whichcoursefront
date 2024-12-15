@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../services/api";
+import axios from "axios";
+
+const API = import.meta.env.VITE_API_URL
 
 const EditCourse = () => {
   const { slug } = useParams(); // Get course slug from URL
@@ -20,7 +22,7 @@ const EditCourse = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const response = await api.get(`/courses/${slug}`);
+        const response = await axios.get(`${API}/courses/${slug}`);
         setCourse(response.data);
         if (response.data.professors.length > 0) {
           setSelectedProfessor(response.data.professors[0].slug);
@@ -60,8 +62,11 @@ const EditCourse = () => {
   };
   // Submit ratings
   const submitRating = async () => {
+    if(newProfessor == ""){
+      alert("first select a proff! if none then add one")
+    }
     try {
-      await api.put(`/courses/${slug}`, {
+      await axios.put(`${API}/courses/${slug}`, {
         slug,
         profSlug: selectedProfessor,
         attendance: ratings.attendance,
@@ -80,13 +85,13 @@ const EditCourse = () => {
   const addProfessor = async () => {
     try {
       // Send POST request to add professor to the course
-      await api.post(`/courses/${slug}`, { name: newProfessor });
+      await axios.post(`${API}/courses/${slug}`, { name: newProfessor });
 
       // Close modal after adding professor
       setShowAddProfessorModal(false);
       
       // Refresh course data with the new professor
-      const response = await api.get(`/courses/${slug}`);
+      const response = await axios.get(`${API}/courses/${slug}`);
       setCourse(response.data);
       setSelectedProfessor(response.data.professors[0].slug); // Select the first professor automatically
     } catch (error) {

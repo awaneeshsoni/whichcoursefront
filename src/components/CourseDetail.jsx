@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import api from "../services/api";
 import "../App.css"
+import axios from "axios";
+
+const API = import.meta.env.VITE_API_URL
+
 
 const CourseDetail = () => {
   const { slug } = useParams();
@@ -12,7 +15,7 @@ const CourseDetail = () => {
 
   useEffect(() => {
     const fetchCourse = async () => {
-      const response = await api.get(`/courses/${slug}`);
+      const response = await axios.get(`${API}/courses/${slug}`);
       setCourse(response.data);
       setLoading(false);
       if (response.data.professors.length > 0) {
