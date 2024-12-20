@@ -6,7 +6,7 @@ import axios from "axios";
 const API = import.meta.env.VITE_API_URL;
 
 export default function Home() {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState("cs101");
   const [loading, setLoading] = useState(false);
   const [course, setCourse] = useState(null);
   const handleSearch = async () => {
