@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import Navbar from "./Navbar"; // Adjust path if needed, e.g., "./components/Navbar"
+import Footer from "./Footer"; // Adjust path if needed, e.g., "./components/Footer"
 
 const API = import.meta.env.VITE_API_URL;
 
 const EditCourse = () => {
-  const { slug } = useParams(); // Get course slug from URL
-  const navigate = useNavigate(); // Navigate programmatically
-  const [course, setCourse] = useState(null); // Store course data
+  const { slug } = useParams();
+  const navigate = useNavigate();
+  const [course, setCourse] = useState(null);
   const [selectedProfessor, setSelectedProfessor] = useState("");
-  const [newProfessor, setNewProfessor] = useState(""); // Store new professor name
+  const [newProfessor, setNewProfessor] = useState("");
   const [showAddProfessorModal, setShowAddProfessorModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [ratings, setRatings] = useState({
-    attendance: null,
-    difficulty: null,
-    grading: null,
-    overall: null,
+    attendance: "",
+    difficulty: "",
+    grading: "",
+    overall: "",
   });
+  const [colorTheme, setColorTheme] = useState("cyberpunk"); // Toggle between 'cyberpunk', 'pastel', 'retro'
 
-  // Fetch course details
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -37,38 +39,33 @@ const EditCourse = () => {
     fetchCourse();
   }, [slug]);
 
-  // Handle rating changes
   const handleRatingsChange = (e) => {
     const { name, value } = e.target;
     const numberValue = value.trim();
 
-    // Check if the input is a valid whole number between 1 and 10
     if (numberValue === "" || /^\d+$/.test(numberValue)) {
-      const parsedValue = parseInt(numberValue, 10);
-
-      if (parsedValue < 1 || parsedValue > 10) {
+      const parsedValue = numberValue === "" ? "" : parseInt(numberValue, 10);
+      if (parsedValue !== "" && (parsedValue < 1 || parsedValue > 10)) {
         alert("Please enter a number between 1 and 10.");
         return;
       }
-
-      setRatings((prev) => ({ ...prev, [name]: value }));
+      setRatings((prev) => ({ ...prev, [name]: parsedValue }));
     } else {
       alert("Only numbers are allowed.");
     }
   };
 
   const handleKeyPress = (e) => {
-    // Only allow numeric input (1-9, 0)
     if (!/[0-9]/.test(e.key)) {
       e.preventDefault();
     }
   };
-  // Submit ratings
+
   const submitRating = async () => {
-    if (selectedProfessor == "") {
-      alert("first select a proff! if none then add one");
+    if (!selectedProfessor) {
+      alert("First select a prof! If none, add one.");
+      return;
     }
-    console.log(ratings);
     try {
       setLoading(true);
       await axios.put(`${API}/courses/${slug}`, {
@@ -88,116 +85,232 @@ const EditCourse = () => {
     }
   };
 
-  // Add a new professor
   const addProfessor = async () => {
     try {
-      // Send POST request to add professor to the course
       await axios.post(`${API}/courses/${slug}`, { name: newProfessor });
-
-      // Close modal after adding professor
       setShowAddProfessorModal(false);
-
-      // Refresh course data with the new professor
       const response = await axios.get(`${API}/courses/${slug}`);
       setCourse(response.data);
-      setSelectedProfessor(response.data.professors[0].slug); // Select the first professor automatically
+      setSelectedProfessor(response.data.professors[response.data.professors.length - 1].slug); // Select the newly added professor
+      setNewProfessor(""); // Reset input
     } catch (error) {
       console.error("Error adding professor:", error);
     }
   };
 
+  // Color Theme Configurations
+  const themes = {
+    cyberpunk: {
+      bg: "bg-gray-900",
+      inputBg: "bg-blue-900",
+      inputBorder: "border-pink-500",
+      inputText: "text-pink-400",
+      inputPlaceholder: "placeholder-purple-500",
+      inputRing: "focus:ring-pink-500",
+      buttonBg: "bg-purple-600",
+      buttonText: "text-blue-300",
+      buttonHover: "hover:bg-purple-700",
+      buttonShadow: "shadow-[0_0_10px_rgba(236,72,153,0.7)]",
+      cardBg: "bg-gradient-to-br from-blue-800 to-purple-700",
+      cardBorder: "border-pink-500",
+      cardShadow: "shadow-[0_0_20px_rgba(236,72,153,0.5)]",
+      textPrimary: "text-pink-400",
+      textSecondary: "text-blue-300",
+      spinner: "border-pink-500 border-t-blue-800",
+      selectBg: "bg-blue-900",
+      selectBorder: "border-pink-500",
+      modalBg: "bg-gray-800",
+      modalBorder: "border-pink-500",
+    },
+    pastel: {
+      bg: "bg-gray-100",
+      inputBg: "bg-lavender-100",
+      inputBorder: "border-mint-400",
+      inputText: "text-peach-600",
+      inputPlaceholder: "placeholder-lavender-400",
+      inputRing: "focus:ring-mint-400",
+      buttonBg: "bg-peach-400",
+      buttonText: "text-lavender-800",
+      buttonHover: "hover:bg-peach-500",
+      buttonShadow: "shadow-[0_0_10px_rgba(255,218,185,0.7)]",
+      cardBg: "bg-gradient-to-br from-lavender-200 to-mint-200",
+      cardBorder: "border-peach-400",
+      cardShadow: "shadow-[0_0_20px_rgba(255,218,185,0.5)]",
+      textPrimary: "text-peach-600",
+      textSecondary: "text-mint-600",
+      spinner: "border-mint-400 border-t-peach-400",
+      selectBg: "bg-lavender-100",
+      selectBorder: "border-mint-400",
+      modalBg: "bg-gray-200",
+      modalBorder: "border-mint-400",
+    },
+    retro: {
+      bg: "bg-gray-700",
+      inputBg: "bg-teal-800",
+      inputBorder: "border-orange-500",
+      inputText: "text-pink-400",
+      inputPlaceholder: "placeholder-teal-400",
+      inputRing: "focus:ring-orange-500",
+      buttonBg: "bg-pink-600",
+      buttonText: "text-teal-300",
+      buttonHover: "hover:bg-pink-700",
+      buttonShadow: "shadow-[0_0_10px_rgba(249,115,22,0.7)]",
+      cardBg: "bg-gradient-to-br from-teal-700 to-pink-600",
+      cardBorder: "border-orange-500",
+      cardShadow: "shadow-[0_0_20px_rgba(249,115,22,0.5)]",
+      textPrimary: "text-orange-500",
+      textSecondary: "text-teal-300",
+      spinner: "border-orange-500 border-t-teal-700",
+      selectBg: "bg-teal-800",
+      selectBorder: "border-orange-500",
+      modalBg: "bg-gray-600",
+      modalBorder: "border-orange-500",
+    },
+  };
+
+  const currentTheme = themes[colorTheme];
+
   return (
-    <div>
-      {loading && <div className="loader"></div>}
-      {course ? (
-        <>
-          <h2>Edit Course: {course.name}</h2>
-          <p>Code: {course.slug}</p>
+    <div className={`flex flex-col min-h-screen ${currentTheme.bg}`}>
+      <Navbar colorTheme={colorTheme} />
 
-          {/* Dropdown for professors */}
-          <div>
-            <label htmlFor="professor-select">Select Professor: </label>
-            <select
-              value={selectedProfessor}
-              onChange={(e) => setSelectedProfessor(e.target.value)}
-            >
-              {course.professors.map((prof) => (
-                <option key={prof.slug} value={prof.slug}>
-                  {prof.name}
-                </option>
-              ))}
-            </select>
+      <main className="flex-grow p-6">
+        {/* Theme Toggle (for demo purposes, remove in final version if desired) */}
+        <div className="max-w-4xl mx-auto mb-4 flex gap-4">
+          <button onClick={() => setColorTheme("cyberpunk")} className="px-3 py-1 bg-blue-500 text-white rounded">
+            Cyberpunk
+          </button>
+          <button onClick={() => setColorTheme("pastel")} className="px-3 py-1 bg-lavender-500 text-white rounded">
+            Pastel
+          </button>
+          <button onClick={() => setColorTheme("retro")} className="px-3 py-1 bg-teal-500 text-white rounded">
+            Retro
+          </button>
+        </div>
 
-            {/* Button to open Add Professor modal */}
-            <button onClick={() => setShowAddProfessorModal(true)}>
-              Add Professor
-            </button>
-          </div>
-
-          {/* Add Professor Modal */}
-          {showAddProfessorModal && (
-            <div className="modal">
-              <div className="modal-content">
-                <h3>Add a New Professor</h3>
-                <input
-                  type="text"
-                  placeholder="Professor Name"
-                  value={newProfessor}
-                  onChange={(e) =>
-                    setNewProfessor(
-                      e.target.value.toLowerCase().replace(/[^a-z]/g, "")
-                    )
-                  }
-                />
-                <button onClick={addProfessor}>Add Professor</button>
-                <button onClick={() => setShowAddProfessorModal(false)}>
-                  Cancel
-                </button>
-              </div>
+        <div className="max-w-4xl mx-auto">
+          {loading && (
+            <div className="flex justify-center mt-6">
+              <div className={`w-12 h-12 border-4 ${currentTheme.spinner} rounded-full animate-spin`}></div>
             </div>
           )}
+          {course ? (
+            <div className={`p-6 ${currentTheme.cardBg} ${currentTheme.cardBorder} rounded-2xl ${currentTheme.cardShadow}`}>
+              <h2 className={`text-3xl font-extrabold ${currentTheme.textPrimary} uppercase mb-4`}>
+                Edit Course: {course.name}
+              </h2>
+              <p className={`${currentTheme.textSecondary} font-mono mb-4`}>
+                Code: {course.slug}
+              </p>
 
-          {/* Ratings input */}
-          <h3>Add Ratings for {selectedProfessor}</h3>
-          <input
-            type="number"
-            placeholder="Attendance (1-10)"
-            name="attendance"
-            value={ratings.attendance}
-            onChange={handleRatingsChange}
-            onKeyPress={handleKeyPress}
-          />
-          <input
-            type="number"
-            placeholder="Course Difficulty (1-10)"
-            name="difficulty"
-            value={ratings.difficulty}
-            onChange={handleRatingsChange}
-            onKeyPress={handleKeyPress}
-          />
-          <input
-            type="number"
-            placeholder="Grading (1-10)"
-            name="grading"
-            value={ratings.grading}
-            onChange={handleRatingsChange}
-            onKeyPress={handleKeyPress}
-          />
-          <input
-            type="number"
-            placeholder="Overall (1-10)"
-            name="overall"
-            value={ratings.overall}
-            onChange={handleRatingsChange}
-            onKeyPress={handleKeyPress}
-          />
-          <button onClick={submitRating}>Submit Ratings</button>
-        </>
-      ) : (
-        <p>Loading course details...</p>
-      )}
-      <br></br>
-      <Link to={'/'} >Home</Link>
+              {/* Professor Selection */}
+              <div className="flex items-center gap-4 mb-6">
+                <label htmlFor="professor-select" className={`${currentTheme.textPrimary} font-bold`}>
+                  Select Professor:
+                </label>
+                <select
+                  id="professor-select"
+                  value={selectedProfessor}
+                  onChange={(e) => setSelectedProfessor(e.target.value)}
+                  className={`p-2 ${currentTheme.selectBg} ${currentTheme.selectBorder} rounded-lg ${currentTheme.inputText} focus:outline-none focus:ring-4 ${currentTheme.inputRing} font-mono`}
+                >
+                  {course.professors.map((prof) => (
+                    <option key={prof.slug} value={prof.slug} className={currentTheme.inputText}>
+                      {prof.name}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  onClick={() => setShowAddProfessorModal(true)}
+                  className={`${currentTheme.buttonBg} ${currentTheme.buttonText} px-4 py-2 rounded-lg font-bold uppercase ${currentTheme.buttonHover} transition-all ${currentTheme.buttonShadow}`}
+                >
+                  Add Professor
+                </button>
+              </div>
+
+              {/* Add Professor Modal */}
+              {showAddProfessorModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                  <div className={`p-6 ${currentTheme.modalBg} ${currentTheme.modalBorder} rounded-2xl ${currentTheme.cardShadow}`}>
+                    <h3 className={`text-xl font-bold ${currentTheme.textPrimary} uppercase mb-4`}>
+                      Add a New Professor
+                    </h3>
+                    <input
+                      type="text"
+                      placeholder="Professor Name"
+                      value={newProfessor}
+                      onChange={(e) =>
+                        setNewProfessor(e.target.value.toLowerCase().replace(/[^a-z]/g, ""))
+                      }
+                      className={`w-full p-3 mb-4 ${currentTheme.inputBg} ${currentTheme.inputBorder} rounded-lg ${currentTheme.inputText} ${currentTheme.inputPlaceholder} focus:outline-none focus:ring-4 ${currentTheme.inputRing} font-mono`}
+                    />
+                    <div className="flex gap-4">
+                      <button
+                        onClick={addProfessor}
+                        className={`${currentTheme.buttonBg} ${currentTheme.buttonText} px-4 py-2 rounded-lg font-bold uppercase ${currentTheme.buttonHover} transition-all ${currentTheme.buttonShadow}`}
+                      >
+                        Add
+                      </button>
+                      <button
+                        onClick={() => setShowAddProfessorModal(false)}
+                        className={`${currentTheme.buttonBg} ${currentTheme.buttonText} px-4 py-2 rounded-lg font-bold uppercase ${currentTheme.buttonHover} transition-all ${currentTheme.buttonShadow}`}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Ratings Section */}
+              <h3 className={`text-xl font-bold ${currentTheme.textPrimary} uppercase mb-4`}>
+                Add Ratings
+              </h3>
+              <div className="space-y-4">
+                {[
+                  { name: "attendance", label: "Attendance (1-10)" },
+                  { name: "difficulty", label: "Course Difficulty (1-10)" },
+                  { name: "grading", label: "Grading (1-10)" },
+                  { name: "overall", label: "Overall (1-10)" },
+                ].map((field) => (
+                  <div key={field.name}>
+                    <input
+                      type="number"
+                      placeholder={field.label}
+                      name={field.name}
+                      value={ratings[field.name]}
+                      onChange={handleRatingsChange}
+                      onKeyPress={handleKeyPress}
+                      className={`w-full p-3 ${currentTheme.inputBg} ${currentTheme.inputBorder} rounded-lg ${currentTheme.inputText} ${currentTheme.inputPlaceholder} focus:outline-none focus:ring-4 ${currentTheme.inputRing} font-mono`}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 flex gap-4">
+                <button
+                  onClick={submitRating}
+                  className={`${currentTheme.buttonBg} ${currentTheme.buttonText} px-6 py-3 rounded-lg font-extrabold uppercase ${currentTheme.buttonHover} transition-all ${currentTheme.buttonShadow}`}
+                >
+                  Submit Ratings
+                </button>
+                <Link
+                  to="/"
+                  className={`inline-block ${currentTheme.textPrimary} ${currentTheme.textHover} font-bold uppercase tracking-wider transition-all hover:scale-105`}
+                >
+                  Home
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <p className={`${currentTheme.textSecondary} text-center font-mono text-xl`}>
+              Loading course details...
+            </p>
+          )}
+        </div>
+      </main>
+
+      <Footer colorTheme={colorTheme} />
     </div>
   );
 };
