@@ -2,9 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
-  const [colorTheme] = React.useState("cyberpunk"); // Change to 'cyberpunk', 'pastel', or 'retro'
+  const [colorTheme] = React.useState("cyberpunk"); 
 
-  // Color Theme Configurations
   const themes = {
     cyberpunk: {
       bg: "bg-gray-900",

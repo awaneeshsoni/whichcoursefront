@@ -1,9 +1,8 @@
 import React from "react";
 
 export default function Footer() {
-  const [colorTheme] = React.useState("cyberpunk"); // Change to 'cyberpunk', 'pastel', or 'retro'
+  const [colorTheme] = React.useState("cyberpunk"); 
 
-  // Color Theme Configurations
   const themes = {
     cyberpunk: {
       bg: "bg-gray-900",

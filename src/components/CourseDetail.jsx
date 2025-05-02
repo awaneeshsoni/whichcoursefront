@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-import Navbar from "./Navbar"; // Adjust path if needed, e.g., "./components/Navbar"
-import Footer from "./Footer"; // Adjust path if needed, e.g., "./components/Footer"
-
+import Navbar from "./Navbar"; 
+import Footer from "./Footer";
 const API = import.meta.env.VITE_API_URL;
 
 const CourseDetail = () => {
@@ -11,7 +10,7 @@ const CourseDetail = () => {
   const [course, setCourse] = useState(null);
   const [selectedProfessor, setSelectedProfessor] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [colorTheme, setColorTheme] = useState("cyberpunk"); // Toggle between 'cyberpunk', 'pastel', 'retro'
+  const [colorTheme, setColorTheme] = useState("cyberpunk"); 
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -32,7 +31,6 @@ const CourseDetail = () => {
     fetchCourse();
   }, [slug]);
 
-  // Color Theme Configurations
   const themes = {
     cyberpunk: {
       bg: "bg-gray-900",
@@ -103,7 +101,6 @@ const CourseDetail = () => {
       <Navbar colorTheme={colorTheme} />
 
       <main className="flex-grow p-6">
-        {/* Theme Toggle (for demo purposes, remove in final version if desired) */}
         <div className="max-w-4xl mx-auto mb-4 flex gap-4">
           <button onClick={() => setColorTheme("cyberpunk")} className="px-3 py-1 bg-blue-500 text-white rounded">
             Cyberpunk
